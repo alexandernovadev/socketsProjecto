@@ -2,15 +2,19 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import App from "../App";
 import BandPage from "../pages/BandPage";
+import { Desktop } from "../pages/tickets/Desktop";
+import { MakeTicket } from "../pages/tickets/MakeTicket";
+import { Queue } from "../pages/tickets/Queue";
+import { InTickets } from "../pages/tickets/InTickets";
 
 const AppRouter: React.FC = () => {
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container-fluid">
-          <Link className="navbar-brand" to="/">
-            Mi App
-          </Link>
+          <a className="navbar-brand" href="/">
+            Sockets IO App |
+          </a>
           <button
             className="navbar-toggler"
             type="button"
@@ -25,9 +29,9 @@ const AppRouter: React.FC = () => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <Link className="nav-link" to="/">
+                <a className="nav-link" href="/">
                   BandPage
-                </Link>
+                </a>
               </li>
 
               {/* Dropdown para TicketsApp */}
@@ -44,18 +48,23 @@ const AppRouter: React.FC = () => {
                 </a>
                 <ul className="dropdown-menu" aria-labelledby="ticketsDropdown">
                   <li>
-                    <Link className="dropdown-item" to="/ticketsapp/home">
-                      Tickets Home
+                    <Link className="dropdown-item" to="/ticketsapp/desktop">
+                      Desktop
                     </Link>
                   </li>
                   <li>
                     <Link className="dropdown-item" to="/ticketsapp/crear">
-                      Crear Ticket
+                      Make Tickets
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="/ticketsapp/showlist">
-                      Show List
+                    <Link className="dropdown-item" to="/ticketsapp/queue">
+                      Queue
+                    </Link>
+                  </li>{" "}
+                  <li>
+                    <Link className="dropdown-item" to="/ticketsapp/ingresar">
+                      Ingrensar
                     </Link>
                   </li>
                 </ul>
@@ -98,9 +107,10 @@ const AppRouter: React.FC = () => {
 
         {/* Rutas para TicketsApp */}
         <Route path="ticketsapp">
-          <Route path="home" element={<>Tickets App Home</>} />
-          <Route path="crear" element={<>Crear Ticket</>} />
-          <Route path="showlist" element={<>Show List</>} />
+          <Route path="desktop" element={<Desktop />} />
+          <Route path="crear" element={<MakeTicket />} />
+          <Route path="queue" element={<Queue />} />
+          <Route path="ingresar" element={<InTickets />} />
         </Route>
 
         {/* Rutas para Chat */}
