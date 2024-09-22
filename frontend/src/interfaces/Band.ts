@@ -3,3 +3,4 @@ export interface Band {
   name: string;
   votes: number;
 }
+

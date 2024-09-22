@@ -1,19 +1,17 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
+import { useSocket } from "../hooks/useSocket";
+import { variables } from "../config/vars";
 
-// Props para el componente BandAdd
-interface BandAddProps {
-  crearBanda: (nombre: string) => void;
-}
-
-export const BandAdd: React.FC<BandAddProps> = ({ crearBanda }) => {
+export const BandAdd = () => {
   const [valor, setValor] = useState<string>("");
+  const { socket } = useSocket(variables.VITE_SOCKET_URL);
 
   const onSubmit = (ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
 
     if (valor.trim().length > 0) {
       // Llamar a la función para emitir el evento
-      crearBanda(valor);
+      socket.emit("crear-banda", { nombre: valor });
 
       setValor(""); // Limpiar el campo después de enviar
     }

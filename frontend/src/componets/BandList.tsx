@@ -1,31 +1,33 @@
-import React, { useEffect, useState, ChangeEvent } from "react";
+import  { useEffect, useState, ChangeEvent } from "react";
+import { useSocket } from "../hooks/useSocket";
+import { variables } from "../config/vars";
+import { Band } from "../interfaces/Band";
 
-// Interfaz para la banda
-interface Band {
-  id: string;
-  name: string;
-  votes: number;
-}
-
-// Props del componente
-interface BandListProps {
-  data: Band[];
-  votar: (id: string) => void;
-  borrar: (id: string) => void;
-  cambiarNombre: (id: string, nombre: string) => void;
-}
-
-export const BandList: React.FC<BandListProps> = ({
-  data,
-  votar,
-  borrar,
-  cambiarNombre,
-}) => {
-  const [bands, setBands] = useState<Band[]>(data);
+export const BandList = () => {
+  const { socket } = useSocket(variables.VITE_SOCKET_URL);
+  const [bands, setBands] = useState<Band[]>([]);
 
   useEffect(() => {
-    setBands(data);
-  }, [data]);
+    socket.on("current-bands", (bands: Band[]) => {
+      setBands(bands);
+    });
+
+    return () => {
+      socket.off("current-bands");
+    };
+  }, [socket]);
+
+  const votar = (id: string): void => {
+    socket.emit("votar-banda", id);
+  };
+
+  const borrar = (id: string): void => {
+    socket.emit("borrar-banda", id);
+  };
+
+  const cambiarNombre = (id: string, nombre: string): void => {
+    socket.emit("cambiar-nombre-banda", { id, nombre });
+  };
 
   const cambioNombre = (event: ChangeEvent<HTMLInputElement>, id: string) => {
     const nuevoNombre = event.target.value;

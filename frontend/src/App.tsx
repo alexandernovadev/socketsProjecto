@@ -1,67 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { io, Socket } from "socket.io-client";
+import React from "react";
 import { BandList } from "./componets/BandList";
 import { BandAdd } from "./componets/BandAdd";
 import { variables } from "./config/vars";
-import { Band } from "./interfaces/Band";
-
-
-const connectSocketServer = (): Socket => {
-  const socket = io(variables.VITE_API_URL, {
-    transports: ["websocket"],
-  });
-  return socket;
-};
+import { useSocket } from "./hooks/useSocket";
 
 const App: React.FC = () => {
-  const [socket] = useState<Socket>(connectSocketServer());
-  const [online, setOnline] = useState<boolean>(false);
-  const [bands, setBands] = useState<Band[]>([]);
-
-  useEffect(() => {
-    setOnline(socket.connected);
-  }, [socket]);
-
-  useEffect(() => {
-    socket.on("connect", () => {
-      setOnline(true);
-    });
-
-    socket.on("disconnect", () => {
-      setOnline(false);
-    });
-
-    return () => {
-      socket.off("connect");
-      socket.off("disconnect");
-    };
-  }, [socket]);
-
-  useEffect(() => {
-    socket.on("current-bands", (bands: Band[]) => {
-      setBands(bands);
-    });
-
-    return () => {
-      socket.off("current-bands");
-    };
-  }, [socket]);
-
-  const votar = (id: string): void => {
-    socket.emit("votar-banda", id);
-  };
-
-  const borrar = (id: string): void => {
-    socket.emit("borrar-banda", id);
-  };
-
-  const cambiarNombre = (id: string, nombre: string): void => {
-    socket.emit("cambiar-nombre-banda", { id, nombre });
-  };
-
-  const crearBanda = (nombre: string): void => {
-    socket.emit("crear-banda", { nombre });
-  };
+  const { online } = useSocket(variables.VITE_SOCKET_URL);
 
   return (
     <div className="container">
@@ -81,16 +25,11 @@ const App: React.FC = () => {
 
       <div className="row">
         <div className="col-8">
-          <BandList
-            data={bands}
-            votar={votar}
-            borrar={borrar}
-            cambiarNombre={cambiarNombre}
-          />
+          <BandList />
         </div>
 
         <div className="col-4">
-          <BandAdd crearBanda={crearBanda} />
+          <BandAdd />
         </div>
       </div>
     </div>
