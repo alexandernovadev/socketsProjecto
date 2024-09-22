@@ -2,16 +2,12 @@ import React, { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { BandList } from "./componets/BandList";
 import { BandAdd } from "./componets/BandAdd";
+import { variables } from "./config/vars";
+import { Band } from "./interfaces/Band";
 
-// Tipos para las bandas
-interface Band {
-  id: string;
-  name: string;
-  votes: number;
-}
 
 const connectSocketServer = (): Socket => {
-  const socket = io("http://localhost:8080", {
+  const socket = io(variables.VITE_API_URL, {
     transports: ["websocket"],
   });
   return socket;
@@ -68,7 +64,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="container" >
+    <div className="container">
       <div className="alert">
         <p>
           Service status:
