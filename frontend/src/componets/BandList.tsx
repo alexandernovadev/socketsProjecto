@@ -1,10 +1,10 @@
-import  { useEffect, useState, ChangeEvent } from "react";
-import { useSocket } from "../hooks/useSocket";
-import { variables } from "../config/vars";
+import { useEffect, useState, ChangeEvent, useContext } from "react";
+
 import { Band } from "../interfaces/Band";
+import { SocketContext } from "../context/SocketContext";
 
 export const BandList = () => {
-  const { socket } = useSocket(variables.VITE_SOCKET_URL);
+  const { socket } = useContext(SocketContext);
   const [bands, setBands] = useState<Band[]>([]);
 
   useEffect(() => {

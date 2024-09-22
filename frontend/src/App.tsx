@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { BandList } from "./componets/BandList";
 import { BandAdd } from "./componets/BandAdd";
-import { variables } from "./config/vars";
-import { useSocket } from "./hooks/useSocket";
+import { SocketContext } from "./context/SocketContext";
+import { BandChart } from "./componets/BandChart";
 
 const App: React.FC = () => {
-  const { online } = useSocket(variables.VITE_SOCKET_URL);
+  const { online } = useContext(SocketContext);
 
   return (
     <div className="container">
@@ -23,6 +23,11 @@ const App: React.FC = () => {
       <h1>BandNames</h1>
       <hr />
 
+      <section className="row">
+        <div className="col">
+          <BandChart />
+        </div>
+      </section>
       <div className="row">
         <div className="col-8">
           <BandList />

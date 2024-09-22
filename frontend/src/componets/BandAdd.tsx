@@ -1,10 +1,9 @@
-import { useState, ChangeEvent, FormEvent } from "react";
-import { useSocket } from "../hooks/useSocket";
-import { variables } from "../config/vars";
+import { useState, ChangeEvent, FormEvent, useContext } from "react";
+import { SocketContext } from "../context/SocketContext";
 
 export const BandAdd = () => {
   const [valor, setValor] = useState<string>("");
-  const { socket } = useSocket(variables.VITE_SOCKET_URL);
+  const { socket } = useContext(SocketContext);
 
   const onSubmit = (ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
