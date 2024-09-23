@@ -45,7 +45,7 @@ export const Maps: React.FC = () => {
   };
 
   // Función para actualizar la posición de un marcador al arrastrarlo
-  const handleMarkerDragEnd = (event: LeafletMouseEvent, id: number) => {
+  const handleMarkerDrag = (event: LeafletMouseEvent, id: number) => {
     const { lat, lng } = event.target.getLatLng();
     const updatedMarker = {
       id,
@@ -53,9 +53,10 @@ export const Maps: React.FC = () => {
       description: `Marcador en (${lat.toFixed(4)}, ${lng.toFixed(4)})`,
     };
 
-    // Enviar el marcador actualizado al servidor para que lo distribuya a otros clientes
+    // Emitir el movimiento del marcador al servidor mientras se mueve
     socket.emit("move-marker", updatedMarker);
 
+    // Actualizar la posición del marcador localmente
     setMarkers((prevMarkers) =>
       prevMarkers.map((marker) =>
         marker.id === id ? updatedMarker : marker
@@ -114,7 +115,10 @@ export const Maps: React.FC = () => {
           position={marker.position}
           draggable={true} // Hacemos que el marcador sea movible
           eventHandlers={{
-            dragend: (event: any) => handleMarkerDragEnd(event, marker.id),
+            // Emitir movimiento del marcador en tiempo real
+            drag: (event: any) => handleMarkerDrag(event, marker.id),
+            // Opción: Mantener el evento dragend para confirmar el final del movimiento
+            dragend: (event: any) => handleMarkerDrag(event, marker.id),
           }}
         >
           <Popup>{marker.description}</Popup>
