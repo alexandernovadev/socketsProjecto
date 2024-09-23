@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -7,6 +7,7 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import { LatLngExpression, LeafletMouseEvent } from "leaflet";
+import { SocketContext } from "../../context/SocketContext";
 
 interface MarkerData {
   id: number; // Identificador único para cada marcador
@@ -15,6 +16,8 @@ interface MarkerData {
 }
 
 export const Maps: React.FC = () => {
+  const { socket } = useContext(SocketContext);
+
   // Coordenadas iniciales del mapa (Bogotá)
   const initialPosition: LatLngExpression = [4.711, -74.0721];
 
@@ -33,6 +36,8 @@ export const Maps: React.FC = () => {
             4
           )}, ${e.latlng.lng.toFixed(4)})`,
         };
+        // Enviar el nuevo marcador al servidor para que lo distribuya a otros clientes
+        socket.emit("add-marker", newMarker);
         setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
       },
     });
@@ -42,14 +47,50 @@ export const Maps: React.FC = () => {
   // Función para actualizar la posición de un marcador al arrastrarlo
   const handleMarkerDragEnd = (event: LeafletMouseEvent, id: number) => {
     const { lat, lng } = event.target.getLatLng();
+    const updatedMarker = {
+      id,
+      position: [lat, lng] as LatLngExpression,
+      description: `Marcador en (${lat.toFixed(4)}, ${lng.toFixed(4)})`,
+    };
+
+    // Enviar el marcador actualizado al servidor para que lo distribuya a otros clientes
+    socket.emit("move-marker", updatedMarker);
+
     setMarkers((prevMarkers) =>
       prevMarkers.map((marker) =>
-        marker.id === id
-          ? { ...marker, position: [lat, lng] as LatLngExpression }
-          : marker
+        marker.id === id ? updatedMarker : marker
       )
     );
   };
+
+  // useEffect para manejar la comunicación con el servidor a través de los sockets
+  useEffect(() => {
+    // Escuchar los marcadores actuales enviados por el servidor al conectarse
+    socket.on("current-markers", (currentMarkers: MarkerData[]) => {
+      setMarkers(currentMarkers);
+    });
+
+    // Escuchar los nuevos marcadores creados por otros clientes
+    socket.on("new-marker", (newMarker: MarkerData) => {
+      setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
+    });
+
+    // Escuchar los marcadores actualizados por otros clientes
+    socket.on("updated-marker", (updatedMarker: MarkerData) => {
+      setMarkers((prevMarkers) =>
+        prevMarkers.map((marker) =>
+          marker.id === updatedMarker.id ? updatedMarker : marker
+        )
+      );
+    });
+
+    // Limpiar los listeners al desmontar el componente
+    return () => {
+      socket.off("current-markers");
+      socket.off("new-marker");
+      socket.off("updated-marker");
+    };
+  }, [socket]);
 
   return (
     <MapContainer

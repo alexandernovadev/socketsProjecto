@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import App from "../App";
 import BandPage from "../pages/BandPage";
 import { Desktop } from "../pages/tickets/Desktop";
 import { MakeTicket } from "../pages/tickets/MakeTicket";
