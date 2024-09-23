@@ -6,6 +6,7 @@ import { Desktop } from "../pages/tickets/Desktop";
 import { MakeTicket } from "../pages/tickets/MakeTicket";
 import { Queue } from "../pages/tickets/Queue";
 import { InTickets } from "../pages/tickets/InTickets";
+import { Maps } from "../pages/maps/Maps";
 
 const AppRouter: React.FC = () => {
   return (
@@ -94,6 +95,32 @@ const AppRouter: React.FC = () => {
                     </Link>
                   </li>
                 </ul>
+              </li>     
+              
+               {/* Dropdown para Mapsa */}
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  id="chatDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Mapas
+                </a>
+                <ul className="dropdown-menu" aria-labelledby="chatDropdown">
+                  <li>
+                    <Link className="dropdown-item" to="/maps/home">
+                      Mapas Home
+                    </Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" to="/chat/myprofile">
+                      My Profile
+                    </Link>
+                  </li>
+                </ul>
               </li>
             </ul>
           </div>
@@ -116,6 +143,11 @@ const AppRouter: React.FC = () => {
         {/* Rutas para Chat */}
         <Route path="chat">
           <Route path="home" element={<>Chat Home</>} />
+          <Route path="myprofile" element={<>My Profile</>} />
+        </Route>
+        {/* Rutas para Mpas */}
+        <Route path="maps">
+          <Route path="home" element={<Maps />} />
           <Route path="myprofile" element={<>My Profile</>} />
         </Route>
       </Routes>
