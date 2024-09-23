@@ -12,6 +12,7 @@ class Server {
   private server: HttpServer;
   private io: SocketIOServer;
   private port: string | number;
+  private sockets: SocketsService;
 
   constructor() {
     this.app = express();
@@ -21,20 +22,34 @@ class Server {
 
     this.initializeMiddlewares();
     this.initializeRoutes();
-    this.initializeSocket();
+
+    this.sockets = new SocketsService(this.io);
   }
 
   private initializeMiddlewares(): void {
     // Aquí puedes agregar middlewares como Helmet, Morgan, etc.
     this.app.use(express.json());
+
+    // CORS
+    this.app.use((req, res, next) => {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept"
+      );
+      next();
+    });
   }
 
   private initializeRoutes(): void {
     this.app.use(express.static("public"));
-  }
 
-  private initializeSocket(): void {
-   new SocketsService(this.io);
+    // get last 13 tickets
+    this.app.get("/last", (req, res) => {
+      res.json({
+        last: this.sockets.ticketList.last13,
+      });
+    });
   }
 
   public listen(): void {

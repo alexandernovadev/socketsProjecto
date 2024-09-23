@@ -1,46 +1,30 @@
-import React from "react";
-
-const data = [
-  {
-    ticketNo: 33,
-    escritorio: 3,
-    agente: "Fernando Herrera",
-  },
-  {
-    ticketNo: 34,
-    escritorio: 4,
-    agente: "Melissa Flores",
-  },
-  {
-    ticketNo: 35,
-    escritorio: 5,
-    agente: "Carlos Castro",
-  },
-  {
-    ticketNo: 36,
-    escritorio: 3,
-    agente: "Fernando Herrera",
-  },
-  {
-    ticketNo: 37,
-    escritorio: 3,
-    agente: "Fernando Herrera",
-  },
-  {
-    ticketNo: 38,
-    escritorio: 2,
-    agente: "Melissa Flores",
-  },
-  {
-    ticketNo: 39,
-    escritorio: 5,
-    agente: "Carlos Castro",
-  },
-];
+import React, { useContext, useEffect, useState } from "react";
+import { SocketContext } from "../../context/SocketContext";
+import { Ticket } from "../../interfaces/Ticket";
+import { variables } from "../../config/vars";
 
 export const Queue: React.FC = () => {
-  const recentTickets = data.slice(0, 3); // Los 3 tickets más recientes
-  const historyTickets = data.slice(3); // El resto de los tickets (historial)
+  const { socket } = useContext(SocketContext);
+  const [tickets, setTickets] = useState<Ticket[]>();
+
+  useEffect(() => {
+    socket.on("assigned-tickets", (assignedTickets) => {
+      setTickets(assignedTickets);
+    });
+
+    return () => {
+      socket.off("assigned-tickets");
+    };
+  }, [socket]);
+
+
+  useEffect(() => {
+    fetch(`${variables.VITE_SOCKET_URL}/last`)
+      .then((res) => res.json())
+      .then((data) => setTickets(data.last));
+  }
+  , []);
+
 
   return (
     <div className="container mt-5">
@@ -48,15 +32,15 @@ export const Queue: React.FC = () => {
         {/* Columna Izquierda: Tickets recientes */}
         <div className="col-md-6">
           <h2 className="mb-4 text-center">Tickets Recientes</h2>
-          {recentTickets.map((ticket) => (
-            <div className="card mb-3 shadow-sm" key={ticket.ticketNo}>
+          {tickets && tickets.slice(0,3).map((ticket) => (
+            <div className="card mb-3 shadow-sm" key={ticket.id}>
               <div className="card-body">
-                <h3 className="card-title">Ticket #{ticket.ticketNo}</h3>
+                <h3 className="card-title">Ticket #{ticket.number}</h3>
                 <p className="card-text">
-                  <strong>Escritorio:</strong> {ticket.escritorio}
+                  <strong>Escritorio:</strong> {ticket.desktop}
                 </p>
                 <p className="card-text">
-                  <strong>Agente:</strong> {ticket.agente}
+                  <strong>Agente:</strong> {ticket.agent}
                 </p>
               </div>
             </div>
@@ -67,17 +51,17 @@ export const Queue: React.FC = () => {
         <div className="col-md-6">
           <h2 className="mb-4 text-center">Historial de Tickets</h2>
           <ul className="list-group">
-            {historyTickets.map((ticket) => (
+            {tickets && tickets!.map((ticket) => (
               <li
                 className="list-group-item d-flex justify-content-between align-items-center"
-                key={ticket.ticketNo}
+                key={ticket.id}
               >
                 <div>
-                  <strong>Ticket #{ticket.ticketNo}</strong> - Escritorio{" "}
-                  {ticket.escritorio}
+                  <strong>Ticket #{ticket.number}</strong> - Escritorio{" "}
+                  {ticket.desktop}
                 </div>
                 <span className="badge bg-primary rounded-pill">
-                  {ticket.agente}
+                  {ticket.agent}
                 </span>
               </li>
             ))}

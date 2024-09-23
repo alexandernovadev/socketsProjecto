@@ -6,7 +6,7 @@ import { TicketList } from "./ticket-list";
 export class SocketsService {
   private io: SocketIOServer;
   private bandList: BandList;
-  private ticketList: TicketList;
+  public ticketList: TicketList;
 
   constructor(io: SocketIOServer) {
     this.io = io;
@@ -33,7 +33,7 @@ export class SocketsService {
         const ticket = this.ticketList.assignTicket(agent, desktop);
         console.log("Asignando ticket...", ticket);
         callback(ticket);
-        // this.io.emit("assigned-tickets", this.ticketList.last13);
+        this.io.emit("assigned-tickets", this.ticketList.last13);
       } );
 
       // BAND APP
