@@ -1,14 +1,18 @@
 import { Server as SocketIOServer, Socket } from "socket.io";
 import { BandList } from "./band-list";
 import { BandNamePayload } from "../interfaces/BandNamePayload";
+import { TicketList } from "./ticket-list";
 
 export class SocketsService {
   private io: SocketIOServer;
   private bandList: BandList;
+  private ticketList: TicketList;
 
   constructor(io: SocketIOServer) {
     this.io = io;
     this.bandList = new BandList();
+
+    this.ticketList = new TicketList();
 
     this.socketEvents();
   }
@@ -18,6 +22,21 @@ export class SocketsService {
     this.io.on("connection", (socket: Socket) => {
       console.log("Cliente conectado");
 
+      // TICKETS APP
+      socket.on("request-ticket", (payload: any, callback: Function) => {
+        const newTicket = this.ticketList.makeTicket();
+        console.log("Generando ticket...", newTicket);
+        callback(newTicket);
+      });
+
+      socket.on("assign-ticket", ({ agent, desktop }, callback: Function) => {
+        const ticket = this.ticketList.assignTicket(agent, desktop);
+        console.log("Asignando ticket...", ticket);
+        callback(ticket);
+        // this.io.emit("assigned-tickets", this.ticketList.last13);
+      } );
+
+      // BAND APP
       // Emitir al cliente conectado, todas las bandas actuales
       socket.emit("current-bands", this.bandList.getBands());
 
