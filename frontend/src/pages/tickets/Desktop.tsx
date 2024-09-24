@@ -29,7 +29,10 @@ export const Desktop = () => {
   };
 
   const salir = () => {
-    localStorage.clear();
+    // Just remove the `agente` and `escritorio` from localStorage
+    localStorage.removeItem("agente");
+    localStorage.removeItem("escritorio");
+
     navigate("/ticketsapp/ingresar");
   };
 

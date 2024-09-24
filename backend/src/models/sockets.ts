@@ -66,7 +66,7 @@ export class SocketsService {
         this.io.emit("current-bands", this.bandList.getBands());
       });
 
-      // MAPS APP 
+      // MAPS APP
 
       // Emitir los marcadores actuales al nuevo cliente conectado
       socket.emit("current-markers", this.markers);
@@ -87,6 +87,32 @@ export class SocketsService {
         // Emitir el marcador actualizado a todos los clientes
         this.io.emit("updated-marker", updatedMarker);
       });
+
+      // CHAT APP
+
+      // TODO:
+      //Validar el JWT
+      //Si el token no es válido, desconectar
+
+      // TODO:
+      //Saber que usuario está activo mediante el UID
+
+      // TODO:
+      //Emitir todos los usuarios conectados
+
+      // TODO:
+      //Socket join, uid
+
+      // TODO
+      //mensaje-personal
+      //Escuchar cuando el cliente manda un mensaje
+
+      // TODO:
+      //Disconnect
+      //Marcar en la BD que el usuario se desconecto
+
+      // TODO:
+      //Emitir todos los usuarios conectados
     });
   }
 }

@@ -13,7 +13,11 @@ import { ChatHome } from "../pages/chats/ChatHome";
 const AppRouter: React.FC = () => {
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <nav className="navbar navbar-expand-lg navbar-dark "
+      style={{
+        backgroundColor: "#6d2cf0",
+      }}
+      >
         <div className="container-fluid">
           <a className="navbar-brand" href="/">
             Sockets IO App |
