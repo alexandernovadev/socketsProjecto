@@ -25,7 +25,7 @@ export const fetchSinToken = async (
 
 export const fetchConToken = async (
   endpoint: string,
-  data: object,
+  data = {},
   method = "GET"
 ) => {
   const url = `${baseUrl}${endpoint}`;

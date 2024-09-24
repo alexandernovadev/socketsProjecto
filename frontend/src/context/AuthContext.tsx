@@ -1,12 +1,12 @@
-import { createContext, ReactNode, useCallback, useState } from "react";
-import { fetchSinToken } from "../helpers/fetch";
+import { createContext, ReactNode, useCallback, useState, useEffect } from "react";
+import { fetchConToken, fetchSinToken } from "../helpers/fetch";
 
 export const initialState: AuthState = {
-  uid: null as string | null,
+  uid: null,
   checking: true,
   logged: false,
-  name: null as string | null,
-  email: null as string | null,
+  name: null,
+  email: null,
 };
 
 export interface AuthProviderProps {
@@ -107,8 +107,60 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return response.ok!;
   };
 
-  const verifyToken = useCallback(() => {
-    console.log("verifyToken");
+  const verifyToken = useCallback(async () => {
+    console.log("Verificando token...");
+
+    const token = localStorage.getItem("token") || "";
+    if (!token) {
+      setAuth({
+        uid: null,
+        checking: false,
+        logged: false,
+        name: null,
+        email: null,
+      });
+
+      console.log("No se encontró el token. Redirigiendo al login.");
+      return false;
+    }
+
+    try {
+      const response = await fetchConToken("/auth/renew");
+
+      if (response.ok) {
+        localStorage.setItem("token", response.token);
+        const { data } = response;
+        setAuth({
+          uid: data.id,
+          checking: false,
+          logged: true,
+          name: data.name,
+          email: data.email,
+        });
+        console.log("Token verificado exitosamente.");
+        return true;
+      } else {
+        setAuth({
+          uid: null,
+          checking: false,
+          logged: false,
+          name: null,
+          email: null,
+        });
+        console.log("Error al renovar el token. Redirigiendo al login.");
+        return false;
+      }
+    } catch (error) {
+      console.log("Error en la verificación del token:", error);
+      setAuth({
+        uid: null,
+        checking: false,
+        logged: false,
+        name: null,
+        email: null,
+      });
+      return false;
+    }
   }, []);
 
   const logout = () => {
@@ -122,6 +174,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       email: null,
     });
   };
+
+  useEffect(() => {
+    verifyToken();
+  }, [verifyToken]);
 
   return (
     <AuthContext.Provider
