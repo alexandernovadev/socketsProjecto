@@ -3,7 +3,11 @@ import { createServer, Server as HttpServer } from "http";
 import { Server as SocketIOServer } from "socket.io";
 import dotenv from "dotenv";
 import { SocketsService } from "./models/sockets";
-// import { v4 as uuidv4 } from "uuid";
+import { connectMongoDB } from "./database/config";
+
+// Routes
+
+import authRoutes from "./routes/auth";
 
 dotenv.config();
 
@@ -19,6 +23,9 @@ class Server {
     this.server = createServer(this.app);
     this.io = new SocketIOServer(this.server);
     this.port = process.env.PORT || 8080;
+
+    // DB Connection
+    connectMongoDB();
 
     this.initializeMiddlewares();
     this.initializeRoutes();
@@ -50,6 +57,8 @@ class Server {
         last: this.sockets.ticketList.last13,
       });
     });
+
+    this.app.use("/api/auth", authRoutes);
   }
 
   public listen(): void {

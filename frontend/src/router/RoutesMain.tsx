@@ -6,6 +6,9 @@ import { MakeTicket } from "../pages/tickets/MakeTicket";
 import { Queue } from "../pages/tickets/Queue";
 import { InTickets } from "../pages/tickets/InTickets";
 import { Maps } from "../pages/maps/Maps";
+import { Register } from "../pages/chats/Register";
+import { Login } from "../pages/chats/Login";
+import { ChatHome } from "../pages/chats/ChatHome";
 
 const AppRouter: React.FC = () => {
   return (
@@ -89,14 +92,19 @@ const AppRouter: React.FC = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="/chat/myprofile">
-                      My Profile
+                    <Link className="dropdown-item" to="/chat/register">
+                     Register
+                    </Link>
+                  </li>    
+                    <li>
+                    <Link className="dropdown-item" to="/chat/login">
+                     Login
                     </Link>
                   </li>
                 </ul>
-              </li>     
-              
-               {/* Dropdown para Mapsa */}
+              </li>
+
+              {/* Dropdown para Mapsa */}
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
@@ -112,11 +120,6 @@ const AppRouter: React.FC = () => {
                   <li>
                     <Link className="dropdown-item" to="/maps/home">
                       Mapas Home
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/chat/myprofile">
-                      My Profile
                     </Link>
                   </li>
                 </ul>
@@ -141,13 +144,13 @@ const AppRouter: React.FC = () => {
 
         {/* Rutas para Chat */}
         <Route path="chat">
-          <Route path="home" element={<>Chat Home</>} />
-          <Route path="myprofile" element={<>My Profile</>} />
+          <Route path="home" element={<ChatHome />} />
+          <Route path="register" element={<Register />} />
+          <Route path="login" element={<Login />} />
         </Route>
         {/* Rutas para Mpas */}
         <Route path="maps">
           <Route path="home" element={<Maps />} />
-          <Route path="myprofile" element={<>My Profile</>} />
         </Route>
       </Routes>
     </>
