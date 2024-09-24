@@ -2,7 +2,7 @@ import { model, Schema } from "mongoose";
 
 const MessageShema = new Schema(
   {
-    of: {
+    from: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,

@@ -6,8 +6,8 @@ import { SocketsService } from "./models/sockets";
 import { connectMongoDB } from "./database/config";
 
 // Routes
-
 import authRoutes from "./routes/auth";
+import messagesRoutes from "./routes/messages";
 
 dotenv.config();
 
@@ -60,6 +60,7 @@ class Server {
     });
 
     this.app.use("/api/auth", authRoutes);
+    this.app.use("/api/messages", messagesRoutes);
   }
 
   public listen(): void {
