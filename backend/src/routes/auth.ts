@@ -1,26 +1,17 @@
 import { Router } from "express";
+import AuthController from "../controller/authController";
+
+// Validations
+import validateLogin from "../middlewares/validations/Login";
+import validateRegister from "../middlewares/validations/Register";
 
 const router = Router();
 
-router.post("/login", (req, res) => {
-  res.json({
-    ok: true,
-    msg: "login",
-  });
-});
+// validate email and password with express-validator
+router.post("/login", validateLogin, AuthController.login);
 
-router.post("/register", (req, res) => {
-  res.json({
-    ok: true,
-    msg: "register",
-  });
-});
+router.post("/register", validateRegister, AuthController.register);
 
-router.get("/renew", (req, res) => {
-  res.json({
-    ok: true,
-    msg: "renew",
-  });
-});
+router.get("/renew", AuthController.renew);
 
 export default router;

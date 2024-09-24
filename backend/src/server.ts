@@ -50,6 +50,7 @@ class Server {
 
   private initializeRoutes(): void {
     this.app.use(express.static("public"));
+    this.app.use(express.json());
 
     // get last 13 tickets
     this.app.get("/last", (req, res) => {
