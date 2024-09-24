@@ -1,5 +1,7 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 interface RegisterFormInputs {
   name: string;
@@ -16,11 +18,29 @@ export const Register = () => {
     formState: { errors },
   } = useForm<RegisterFormInputs>();
 
-  const onSubmit = (data: RegisterFormInputs) => {
+  const { register: registerUser } = useContext(AuthContext); // Usamos el método register desde el contexto
+  const navigate = useNavigate(); // Para redirigir después del registro
+
+  const onSubmit = async (data: RegisterFormInputs) => {
+    // Eliminamos confirmPassword ya que no necesitamos enviarlo al backend
     // @ts-ignore
     delete data.confirmPassword;
 
-    console.log(data);
+    // Hacemos la llamada al método register del contexto de autenticación
+    const success = await registerUser(
+      data.name,
+      data.email,
+      data.surname,
+      data.password
+    );
+
+    if (success) {
+      // Si el registro es exitoso, redirigimos al usuario al chat o al login
+      navigate("/chat/home");
+    } else {
+      // Manejar el error en caso de que el registro falle
+      console.log("Error al registrarse");
+    }
   };
 
   return (

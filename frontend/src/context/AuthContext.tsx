@@ -24,11 +24,11 @@ export interface AuthState {
 export interface ResponseLogin {
   ok: boolean;
   msg: string;
-  data: Data;
+  data: User;
   token: string;
 }
 
-export interface Data {
+export interface User {
   name: string;
   surname: string;
   email: string;
@@ -38,8 +38,13 @@ export interface Data {
 
 interface AuthContextProps {
   auth: AuthState;
-  login: (password: string, email: string) => void;
-  register: (name: string, email: string) => void;
+  login: (password: string, email: string) => Promise<boolean>;
+  register: (
+    name: string,
+    email: string,
+    surname: string,
+    password: string
+  ) => Promise<boolean>;
   verifyToken: () => void;
   logout: () => void;
 }
@@ -73,8 +78,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return response.ok!;
   };
 
-  const register = (name: string, email: string) => {
+  const register = async (
+    name: string,
+    email: string,
+    surname: string,
+    password: string
+  ): Promise<boolean> => {
     console.log("register");
+
+    const response = (await fetchSinToken(
+      "/auth/register",
+      { name, email, surname, password },
+      "POST"
+    )) as ResponseLogin;
+
+    if (response.ok) {
+      localStorage.setItem("token", response.token);
+      const { data } = response;
+      setAuth({
+        uid: data.id,
+        checking: false,
+        logged: true,
+        name: data.name,
+        email: data.email,
+      });
+    }
+
+    return response.ok!;
   };
 
   const verifyToken = useCallback(() => {
@@ -83,6 +113,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const logout = () => {
     console.log("logout");
+    localStorage.removeItem("token");
+    setAuth({
+      uid: null,
+      checking: false,
+      logged: false,
+      name: null,
+      email: null,
+    });
   };
 
   return (
