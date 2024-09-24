@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useCallback, useState, useEffect } from "react";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useState,
+  useEffect,
+} from "react";
 import { fetchConToken, fetchSinToken } from "../helpers/fetch";
 
 export const initialState: AuthState = {
@@ -6,6 +12,7 @@ export const initialState: AuthState = {
   checking: true,
   logged: false,
   name: null,
+  surname: null,
   email: null,
 };
 
@@ -18,6 +25,7 @@ export interface AuthState {
   checking: boolean;
   logged: boolean;
   name: string | null;
+  surname: string | null;
   email: string | null;
 }
 
@@ -72,6 +80,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         logged: true,
         name: data.name,
         email: data.email,
+        surname: data.surname,
       });
     }
 
@@ -101,6 +110,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         logged: true,
         name: data.name,
         email: data.email,
+        surname: data.surname,
       });
     }
 
@@ -118,6 +128,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         logged: false,
         name: null,
         email: null,
+        surname: null,
       });
 
       console.log("No se encontró el token. Redirigiendo al login.");
@@ -136,6 +147,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           logged: true,
           name: data.name,
           email: data.email,
+          surname: data.surname,
         });
         console.log("Token verificado exitosamente.");
         return true;
@@ -146,6 +158,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           logged: false,
           name: null,
           email: null,
+          surname: null,
         });
         console.log("Error al renovar el token. Redirigiendo al login.");
         return false;
@@ -158,6 +171,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         logged: false,
         name: null,
         email: null,
+        surname: null,
       });
       return false;
     }
@@ -172,6 +186,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       logged: false,
       name: null,
       email: null,
+      surname: null,
     });
   };
 

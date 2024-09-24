@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import { Loading } from "../componets/shared/Loading";
 
 interface PublicRouteProps {
   children: JSX.Element;
@@ -13,7 +14,7 @@ export const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
 
   if (checking) {
     // Show a loader while checking the token
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (logged) {
