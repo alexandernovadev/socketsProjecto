@@ -1,5 +1,7 @@
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 interface LoginFormInputs {
   email: string;
@@ -11,11 +13,26 @@ export const Login = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormInputs>();
+  } = useForm<LoginFormInputs>({
+    defaultValues: {
+      email: "asdasdasd@nova.com",
+      password: "sashamiro",
+    },
+  });
 
-  const onSubmit = (data: LoginFormInputs) => {
-    console.log("Form Data: ", data);
+  const { login,auth } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const [isLogginError, setIsLogginError] = useState(false);
+
+  const onSubmit = async (data: LoginFormInputs) => {
     // Aquí puedes llamar a tu API de autenticación
+    const ok = await login(data.password, data.email);
+    console.log("Authenticated ! ", ok);
+    // @ts-ignore
+    if (!ok) {
+      setIsLogginError(true);
+    }
   };
 
   return (
@@ -26,6 +43,11 @@ export const Login = () => {
     >
       <h1>Login</h1>
 
+      { !auth.checking && isLogginError && (
+        <div className="alert alert-danger" role="alert">
+          Usuario o contraseña incorrectos
+        </div>
+      )}
       <div className="mb-3">
         <label className="form-label">Email address</label>
         <input
