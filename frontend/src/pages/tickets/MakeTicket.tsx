@@ -9,7 +9,7 @@ export const MakeTicket = () => {
   const newTicket = () => {
     console.log("Generando ticket...");
 
-    socket.emit("request-ticket", null, (ticket: Ticket) => {
+    socket?.emit("request-ticket", null, (ticket: Ticket) => {
       console.log("Ticket", ticket);
       setTicket(ticket);
     });

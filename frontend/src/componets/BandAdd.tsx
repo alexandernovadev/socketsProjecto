@@ -10,7 +10,7 @@ export const BandAdd = () => {
 
     if (valor.trim().length > 0) {
       // Llamar a la función para emitir el evento
-      socket.emit("crear-banda", { nombre: valor });
+      socket?.emit("crear-banda", { nombre: valor });
 
       setValor(""); // Limpiar el campo después de enviar
     }

@@ -8,25 +8,25 @@ export const BandList = () => {
   const [bands, setBands] = useState<Band[]>([]);
 
   useEffect(() => {
-    socket.on("current-bands", (bands: Band[]) => {
+    socket?.on("current-bands", (bands: Band[]) => {
       setBands(bands);
     });
 
     return () => {
-      socket.off("current-bands");
+      socket?.off("current-bands");
     };
   }, [socket]);
 
   const votar = (id: string): void => {
-    socket.emit("votar-banda", id);
+    socket?.emit("votar-banda", id);
   };
 
   const borrar = (id: string): void => {
-    socket.emit("borrar-banda", id);
+    socket?.emit("borrar-banda", id);
   };
 
   const cambiarNombre = (id: string, nombre: string): void => {
-    socket.emit("cambiar-nombre-banda", { id, nombre });
+    socket?.emit("cambiar-nombre-banda", { id, nombre });
   };
 
   const cambioNombre = (event: ChangeEvent<HTMLInputElement>, id: string) => {

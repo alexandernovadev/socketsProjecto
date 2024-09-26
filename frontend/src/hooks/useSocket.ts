@@ -1,38 +1,44 @@
-import { useEffect, useMemo, useState } from "react";
-import { io } from "socket.io-client";
+import { useCallback, useEffect, useState } from "react";
+import { io, Socket } from "socket.io-client";
 
 export const useSocket = (serverPath = "http://localhost:8080") => {
-  const socket = useMemo(
-    () =>
-      io(serverPath, {
-        transports: ["websocket"],
-      }),
-    [serverPath]
-  );
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [online, setOnline] = useState(false);
 
-  const [online, setOnline] = useState<boolean>(false);
+  const conectarSocket = useCallback(() => {
+    const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    setOnline(socket.connected);
+    const socketTemp = io(serverPath, {
+      transports: ["websocket"],
+      autoConnect: true,
+      forceNew: true,
+      query: {
+        "x-token": token,
+      },
+    });
+    setSocket(socketTemp);
+  }, [serverPath]);
+
+  const desconectarSocket = useCallback(() => {
+    socket?.disconnect();
   }, [socket]);
 
   useEffect(() => {
-    socket.on("connect", () => {
-      setOnline(true);
-    });
+    setOnline(socket?.connected ?? false);
+  }, [socket]);
 
-    socket.on("disconnect", () => {
-      setOnline(false);
-    });
+  useEffect(() => {
+    socket?.on("connect", () => setOnline(true));
+  }, [socket]);
 
-    return () => {
-      socket.off("connect");
-      socket.off("disconnect");
-    };
+  useEffect(() => {
+    socket?.on("disconnect", () => setOnline(false));
   }, [socket]);
 
   return {
     socket,
-    online
+    online,
+    conectarSocket,
+    desconectarSocket,
   };
 };

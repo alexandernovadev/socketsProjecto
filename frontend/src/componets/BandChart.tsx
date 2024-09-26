@@ -12,13 +12,13 @@ export const BandChart = () => {
     // Registra todos los componentes de Chart.js
     Chart.register(...registerables);
 
-    socket.on("current-bands", (bands) => {
+    socket?.on("current-bands", (bands) => {
       crearGrafica(bands);
     });
 
     // Limpiar el evento del socket al desmontar el componente
     return () => {
-      socket.off("current-bands");
+      socket?.off("current-bands");
       if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy(); // Destruye la instancia del gráfico cuando el componente se desmonta
       }

@@ -8,7 +8,7 @@ import {
 } from "react-leaflet";
 import { LatLngExpression, LeafletMouseEvent } from "leaflet";
 import { SocketContext } from "../../context/SocketContext";
-
+import { v4 as uuidv4 } from "uuid";
 interface MarkerData {
   id: number; // Identificador único para cada marcador
   position: LatLngExpression;
@@ -30,14 +30,14 @@ export const Maps: React.FC = () => {
       click(e) {
         // Al hacer clic en el mapa, agrega un nuevo marcador en la posición del clic
         const newMarker = {
-          id: Date.now(), // Usamos el timestamp como un ID único
+          id: +uuidv4(),
           position: [e.latlng.lat, e.latlng.lng] as LatLngExpression,
           description: `Marcador en (${e.latlng.lat.toFixed(
             4
           )}, ${e.latlng.lng.toFixed(4)})`,
         };
         // Enviar el nuevo marcador al servidor para que lo distribuya a otros clientes
-        socket.emit("add-marker", newMarker);
+        socket?.emit("add-marker", newMarker);
         setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
       },
     });
@@ -54,30 +54,28 @@ export const Maps: React.FC = () => {
     };
 
     // Emitir el movimiento del marcador al servidor mientras se mueve
-    socket.emit("move-marker", updatedMarker);
+    socket?.emit("move-marker", updatedMarker);
 
     // Actualizar la posición del marcador localmente
     setMarkers((prevMarkers) =>
-      prevMarkers.map((marker) =>
-        marker.id === id ? updatedMarker : marker
-      )
+      prevMarkers.map((marker) => (marker.id === id ? updatedMarker : marker))
     );
   };
 
   // useEffect para manejar la comunicación con el servidor a través de los sockets
   useEffect(() => {
     // Escuchar los marcadores actuales enviados por el servidor al conectarse
-    socket.on("current-markers", (currentMarkers: MarkerData[]) => {
+    socket?.on("current-markers", (currentMarkers: MarkerData[]) => {
       setMarkers(currentMarkers);
     });
 
     // Escuchar los nuevos marcadores creados por otros clientes
-    socket.on("new-marker", (newMarker: MarkerData) => {
+    socket?.on("new-marker", (newMarker: MarkerData) => {
       setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
     });
 
     // Escuchar los marcadores actualizados por otros clientes
-    socket.on("updated-marker", (updatedMarker: MarkerData) => {
+    socket?.on("updated-marker", (updatedMarker: MarkerData) => {
       setMarkers((prevMarkers) =>
         prevMarkers.map((marker) =>
           marker.id === updatedMarker.id ? updatedMarker : marker
@@ -87,14 +85,15 @@ export const Maps: React.FC = () => {
 
     // Limpiar los listeners al desmontar el componente
     return () => {
-      socket.off("current-markers");
-      socket.off("new-marker");
-      socket.off("updated-marker");
+      socket?.off("current-markers");
+      socket?.off("new-marker");
+      socket?.off("updated-marker");
     };
   }, [socket]);
 
   return (
     <MapContainer
+      id="map"
       center={initialPosition}
       zoom={13}
       style={{ height: "100vh", width: "100%" }}

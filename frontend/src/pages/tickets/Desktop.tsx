@@ -13,7 +13,7 @@ export const Desktop = () => {
   const [noTicket, setNoTicket] = useState(false);
 
   const nextTicket = () => {
-    socket.emit(
+    socket?.emit(
       "assign-ticket",
       { agent: usuario.agente, desktop: usuario.escritorio },
       (ticket: Ticket) => {

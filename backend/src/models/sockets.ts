@@ -24,6 +24,10 @@ export class SocketsService {
     this.io.on("connection", (socket: Socket) => {
       console.log("Cliente conectado");
 
+      socket.on("disconnect", () => {
+        console.log("Cliente desconectado");
+      });
+
       // TICKETS APP
       socket.on("request-ticket", (payload: any, callback: Function) => {
         const newTicket = this.ticketList.makeTicket();

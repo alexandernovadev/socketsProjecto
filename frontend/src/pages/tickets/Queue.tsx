@@ -8,12 +8,12 @@ export const Queue: React.FC = () => {
   const [tickets, setTickets] = useState<Ticket[]>();
 
   useEffect(() => {
-    socket.on("assigned-tickets", (assignedTickets) => {
+    socket?.on("assigned-tickets", (assignedTickets) => {
       setTickets(assignedTickets);
     });
 
     return () => {
-      socket.off("assigned-tickets");
+      socket?.off("assigned-tickets");
     };
   }, [socket]);
 
