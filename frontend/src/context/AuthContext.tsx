@@ -140,7 +140,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (response.ok) {
         localStorage.setItem("token", response.token);
-        const { data } = response;
+        const { user:data } = response;
         setAuth({
           uid: data.id,
           checking: false,
