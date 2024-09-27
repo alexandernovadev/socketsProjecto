@@ -3,6 +3,8 @@ import { BandList } from "./band-list";
 import { BandNamePayload } from "../interfaces/BandNamePayload";
 import { TicketList } from "./ticket-list";
 import { MarkerData } from "../interfaces/Maps";
+import { comprobarJWT } from "../helpers/jwttoken";
+import { userConnected, userDisconnected } from "../database/socketsEvents";
 
 export class SocketsService {
   private io: SocketIOServer;
@@ -21,11 +23,21 @@ export class SocketsService {
 
   private socketEvents(): void {
     // On connection
-    this.io.on("connection", (socket: Socket) => {
+    this.io.on("connection", async (socket: Socket) => {
       console.log("Cliente conectado");
 
-      socket.on("disconnect", () => {
+      // @ts-ignore
+      const [isValid, uid] = comprobarJWT(socket.handshake.query["x-token"]);
+      if (!isValid) {
+        console.log("socket no identificado");
+        return socket.disconnect();
+      }
+
+      await userConnected(uid);
+
+      socket.on("disconnect", async () => {
         console.log("Cliente desconectado");
+        await userDisconnected(uid);
       });
 
       // TICKETS APP

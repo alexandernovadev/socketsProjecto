@@ -20,3 +20,14 @@ export const validateToken = (token: string) => {
     return null;
   }
 };
+
+export const comprobarJWT = (token = "") => {
+  try {
+    // @ts-ignore
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET || "");
+
+    return [true, uid];
+  } catch (error) {
+    return [false, null];
+  }
+};
