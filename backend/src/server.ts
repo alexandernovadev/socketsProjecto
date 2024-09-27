@@ -4,7 +4,7 @@ import { Server as SocketIOServer } from "socket.io";
 import dotenv from "dotenv";
 import { SocketsService } from "./models/sockets";
 import { connectMongoDB } from "./database/config";
-
+import cors from "cors";
 // Routes
 import authRoutes from "./routes/auth";
 import messagesRoutes from "./routes/messages";
@@ -38,14 +38,7 @@ class Server {
     this.app.use(express.json());
 
     // CORS
-    this.app.use((req, res, next) => {
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept , x-token"
-      );
-      next();
-    });
+    this.app.use(cors());
   }
 
   private initializeRoutes(): void {

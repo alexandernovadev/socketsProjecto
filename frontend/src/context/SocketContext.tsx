@@ -57,7 +57,9 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
         payload: mensaje,
       });
 
-      scrollToBottomAnimated("mensajes");
+      console.log("mensaje-personal", mensaje);
+      
+      // scrollToBottomAnimated("mensajes");
     });
   }, [socket, dispatch]);
 

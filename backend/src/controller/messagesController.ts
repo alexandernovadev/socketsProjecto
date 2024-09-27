@@ -5,10 +5,13 @@ import mongoose from "mongoose";
 class MessagesController {
   async getMessages(req: Request, res: Response): Promise<Response> {
     // @ts-ignore
-    const uid = req.uid;
+    const uid = req.uid;    
 
     // Get `from` query parameter and cast to string
     const Messagefrom = (req.query.from as string) || "";
+
+    console.log("Messagefrom", Messagefrom);
+    
 
     // Validate if `Messagefrom` is a valid ObjectId; otherwise, return an error
     if (!mongoose.Types.ObjectId.isValid(Messagefrom)) {

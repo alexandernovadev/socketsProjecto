@@ -55,8 +55,8 @@ export const chatReducer = (
 
     case types.nuevoMensaje:
       if (
-        state.chatActivo === action.payload.from ||
-        state.chatActivo === action.payload.to
+        state.chatActivo?.id === action.payload.from ||
+        state.chatActivo?.id === action.payload.to
       ) {
         return {
           ...state,

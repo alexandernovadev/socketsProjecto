@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export const Navbar = () => {
   return (
     <nav
-      className="navbar navbar-expand-lg navbar-dark "
+      className="navbar navbar-dark"
       style={{
         backgroundColor: "#6d2cf0",
       }}

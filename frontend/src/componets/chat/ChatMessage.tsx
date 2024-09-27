@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ChatContext } from "../../context/chat/ChatContext";
+import { AuthContext } from "../../context/AuthContext";
 
 interface ChatMessageProps {
   message: string;
@@ -19,7 +21,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     >
       <div
         className={`p-3 rounded ${
-          sender === "user" ? "bg-primary text-white" : "bg-info-subtle text-white"
+          sender === "user"
+            ? "bg-primary text-white"
+            : "bg-info-subtle text-white"
         }`}
       >
         <p className="mb-0">{message}</p>
@@ -30,21 +34,27 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
 };
 
 export const ChatWindow: React.FC = () => {
-  return (
-    <div className="bg-dark p-4 overflow-auto" style={{ height: "87vh" }}>
-      <ChatMessage
-        message="Test which is a new approach to have all solutions"
-        sender="other"
-        timestamp="11:01 AM | June 9"
-      />
-      <ChatMessage
-        message="Test which is a new approach to have all solutions"
-        sender="user"
-        timestamp="11:01 AM | June 9"
-      />
+  const { chatState } = useContext(ChatContext);
+  const {
+    auth: { uid },
+  } = useContext(AuthContext);
 
-      
-      {/* Puedes repetir este ChatMessage para más mensajes */}
+  console.log("chatState", chatState);
+
+  return (
+    <div className="bg-dark p-4 overflow-auto h-auto">
+    {
+      chatState.mensajes.map((msg:any) => (
+        <ChatMessage
+          key={msg._id}
+          message={msg.message}
+          sender={msg.to === uid ? "user" : "other"}
+          timestamp={msg.createdAt}
+        />
+      ))
+    }
+
+
     </div>
   );
 };

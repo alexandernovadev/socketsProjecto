@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { ChatContext } from "../../context/chat/ChatContext";
 import { types } from "../../types/types";
+import { fetchConToken } from "../../helpers/fetch";
 
 interface ChatListItemProps {
   email: string;
@@ -22,7 +23,7 @@ export const ChatListItem: React.FC<ChatListItemProps> = ({
   const { chatState, dispatch } = useContext(ChatContext);
   const { chatActivo } = chatState;
 
-  const handleChat = () => {
+  const handleChat = async () => {
     dispatch({
       type: types.activarChat,
       payload: {
@@ -31,6 +32,15 @@ export const ChatListItem: React.FC<ChatListItemProps> = ({
         email,
         id,
       },
+    });
+
+    console.log("id", id);
+
+    // // Cargar los mensajes del chat, and put "from" in the query string
+    const resp = await fetchConToken(`/messages?from=${id}`);
+    dispatch({
+      type: types.cargarMensajes,
+      payload: resp?.messages,
     });
   };
 
