@@ -1,18 +1,27 @@
+import { useContext } from "react";
 import { ChatListItem } from "./ChatListItem";
+import { ChatContext } from "../../context/chat/ChatContext";
 
 export const ChatList: React.FC = () => {
+  const { chatState } = useContext(ChatContext);
+
+  console.log(chatState.usuarios);
+
   return (
     <div
       className="bg-dark text-white overflow-auto"
       style={{ height: "100vh" }}
     >
-      <ChatListItem
-        name="Sunil Rajput"
-        messagePreview="Test, which is a new approach to have all solutions..."
-        status="Online"
-        date="Dec 25"
-      />
-      {/* Puedes repetir este ChatListItem para otras conversaciones */}
+      {chatState?.usuarios?.map((usuario) => (
+        <ChatListItem
+          key={usuario.id}
+          name={usuario.name}
+          email={usuario.email}
+          online={usuario.online}
+          id={usuario.id}
+          surname={usuario.surname}
+        />
+      ))}
     </div>
   );
 };

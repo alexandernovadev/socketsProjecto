@@ -1,8 +1,11 @@
 import { types } from "../../types/types";
 
 export interface Usuario {
-  uid: string;
-  nombre: string;
+  email: string;
+  id: string;
+  name: string;
+  online: string;
+  surname: string;
 }
 
 export interface Mensaje {

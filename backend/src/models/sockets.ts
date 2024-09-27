@@ -117,7 +117,7 @@ export class SocketsService {
       // TODO: Saber que usuario está activo mediante el UID
 
       // Emitir todos los usuarios conectados
-      this.io.emit("lista-usuarios", await getUsers());
+      this.io.emit("lista-usuarios", await getUsers(uid));
 
       // TODO: Socket join, uid
 
