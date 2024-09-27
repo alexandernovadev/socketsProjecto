@@ -16,7 +16,7 @@ export interface Mensaje {
 
 export interface ChatState {
   uid: string;
-  chatActivo: string | null;
+  chatActivo: Usuario | null;
   usuarios: Usuario[];
   mensajes: Mensaje[];
 }
@@ -45,7 +45,7 @@ export const chatReducer = (
       };
 
     case types.activarChat:
-      if (state.chatActivo === action.payload) return state;
+      if (state.chatActivo?.id === action.payload.id) return state;
 
       return {
         ...state,

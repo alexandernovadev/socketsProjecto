@@ -29,8 +29,8 @@ const userDisconnected = async (uid: string) => {
   return user;
 };
 
-const getUsers = async (myId: string) => {
-  const users = await User.find({ _id: { $ne: myId } }).sort("-online");
+const getUsers = async () => {
+  const users = await User.find().sort("-online");
   return users;
 };
 

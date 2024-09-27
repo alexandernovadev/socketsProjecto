@@ -5,7 +5,7 @@ import { ChatContext } from "../../context/chat/ChatContext";
 export const ChatList: React.FC = () => {
   const { chatState } = useContext(ChatContext);
 
-  console.log(chatState.usuarios);
+  
 
   return (
     <div

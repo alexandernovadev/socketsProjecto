@@ -42,6 +42,7 @@ export class SocketsService {
       socket.on("disconnect", async () => {
         console.log("Cliente desconectado");
         await userDisconnected(uid);
+        this.io.emit("lista-usuarios", await getUsers());
       });
 
       // TICKETS APP
@@ -117,7 +118,7 @@ export class SocketsService {
       // TODO: Saber que usuario está activo mediante el UID
 
       // Emitir todos los usuarios conectados
-      this.io.emit("lista-usuarios", await getUsers(uid));
+      this.io.emit("lista-usuarios", await getUsers());
 
       // TODO: Socket join, uid
 

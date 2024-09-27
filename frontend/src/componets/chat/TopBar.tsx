@@ -4,8 +4,13 @@ import { AuthContext } from "../../context/AuthContext";
 export const TopBar: React.FC = () => {
   const { auth,logout } = useContext(AuthContext);
   return (
-    <div className="d-flex justify-content-between align-items-center p-3 bg-dark text-white border-bottom border-secondary">
+    <div 
+    className="d-flex justify-content-between align-items-center p-3 bg-dark text-white border-bottom border-secondary">
       <span className="text-primary">{auth.name} </span>
+      <hr />
+      <p>
+        {auth.email}
+      </p>
       <span className="btn btn-danger " onClick={logout}>
         Salir
       </span>

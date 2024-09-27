@@ -7,6 +7,9 @@ import "leaflet/dist/leaflet.css";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import { ChatProvider } from "./context/chat/ChatContext.tsx";
 
+import "./index.css";
+
+
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
   <AuthProvider>

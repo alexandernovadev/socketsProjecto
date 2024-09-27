@@ -21,7 +21,7 @@ export const ChatHome: React.FC = () => {
     <div className="d-flex flex-column flex-md-row">
       <div
         className="col-12 col-md-3 p-0 border-end border-secondary"
-        style={{ height: "100vh" }}
+        style={{ height: "100vh", minWidth: "320px", width: "320px" }}
       >
         <TopBar />
         <ChatList />

@@ -1,0 +1,7 @@
+.cursor-pointer{
+  cursor: pointer !important;
+}
+
+.bg-active{
+  background-color: hsla(0, 0%, 96%, 0.206);
+}
