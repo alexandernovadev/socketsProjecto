@@ -6,6 +6,7 @@ import { MarkerData } from "../interfaces/Maps";
 import { comprobarJWT } from "../helpers/jwttoken";
 import {
   getUsers,
+  saveMessage,
   userConnected,
   userDisconnected,
 } from "../database/socketsEvents";
@@ -111,24 +112,26 @@ export class SocketsService {
 
       // __________ CHAT APP ____________
 
-      // TODO:
-      //Validar el JWT
-      //Si el token no es válido, desconectar
-
-      // TODO: Saber que usuario está activo mediante el UID
+      // Validar el JWT, si el token no es válido, desconectar [x]
+      // Saber que usuario está activo mediante el UID [x]
 
       // Emitir todos los usuarios conectados
       this.io.emit("lista-usuarios", await getUsers());
 
-      // TODO: Socket join, uid
+      // Socket join, uid
+      socket.join(uid);
 
       // TODO mensaje-personal : Escuchar cuando el cliente manda un mensaje
+      socket.on("mensaje-personal", async(payload) => {
+        console.log("Mensaje personal", payload);
+        const messageDb =  await saveMessage(payload);
+        this.io.to(payload.to).emit("mensaje-personal", messageDb);
+        this.io.to(payload.from).emit("mensaje-personal", messageDb);
+      });
 
       // TODO: Disconnect : Marcar en la BD que el usuario se desconecto
 
       // TODO: Emitir todos los usuarios conectados
-
-
     });
   }
 }

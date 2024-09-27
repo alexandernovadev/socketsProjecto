@@ -5,6 +5,7 @@ import { Socket } from "socket.io-client";
 import { AuthContext } from "./AuthContext";
 import { ChatContext } from "./chat/ChatContext";
 import { types } from "../types/types";
+import { scrollToBottomAnimated } from "../helpers/scrollToBottom";
 
 // Definir la interfaz del contexto
 interface SocketContextProps {
@@ -46,6 +47,17 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
         type: types.usuariosCargados,
         payload: usuarios,
       });
+    });
+  }, [socket, dispatch]);
+
+  useEffect(() => {
+    socket?.on("mensaje-personal", (mensaje) => {
+      dispatch({
+        type: types.nuevoMensaje,
+        payload: mensaje,
+      });
+
+      scrollToBottomAnimated("mensajes");
     });
   }, [socket, dispatch]);
 
