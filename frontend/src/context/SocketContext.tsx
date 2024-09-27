@@ -3,6 +3,8 @@ import { useSocket } from "../hooks/useSocket";
 import { variables } from "../config/vars";
 import { Socket } from "socket.io-client";
 import { AuthContext } from "./AuthContext";
+import { ChatContext } from "./chat/ChatContext";
+import { types } from "../types/types";
 
 // Definir la interfaz del contexto
 interface SocketContextProps {
@@ -23,6 +25,8 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
 
   const { auth } = useContext(AuthContext);
 
+  const { dispatch } = useContext(ChatContext);
+
   useEffect(() => {
     if (auth.logged) {
       conectarSocket();
@@ -34,6 +38,16 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
       desconectarSocket();
     }
   }, [auth, desconectarSocket]);
+
+  // Escuchar los cambios en los usuarios conectados
+  useEffect(() => {
+    socket?.on("lista-usuarios", (usuarios) => {
+      dispatch({
+        type: types.usuariosCargados,
+        payload: usuarios,
+      });
+    });
+  }, [socket, dispatch]);
 
   return (
     <SocketContext.Provider value={{ socket, online }}>

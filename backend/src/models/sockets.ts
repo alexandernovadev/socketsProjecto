@@ -4,7 +4,11 @@ import { BandNamePayload } from "../interfaces/BandNamePayload";
 import { TicketList } from "./ticket-list";
 import { MarkerData } from "../interfaces/Maps";
 import { comprobarJWT } from "../helpers/jwttoken";
-import { userConnected, userDisconnected } from "../database/socketsEvents";
+import {
+  getUsers,
+  userConnected,
+  userDisconnected,
+} from "../database/socketsEvents";
 
 export class SocketsService {
   private io: SocketIOServer;
@@ -104,31 +108,26 @@ export class SocketsService {
         this.io.emit("updated-marker", updatedMarker);
       });
 
-      // CHAT APP
+      // __________ CHAT APP ____________
 
       // TODO:
       //Validar el JWT
       //Si el token no es válido, desconectar
 
-      // TODO:
-      //Saber que usuario está activo mediante el UID
+      // TODO: Saber que usuario está activo mediante el UID
 
-      // TODO:
-      //Emitir todos los usuarios conectados
+      // Emitir todos los usuarios conectados
+      this.io.emit("lista-usuarios", await getUsers());
 
-      // TODO:
-      //Socket join, uid
+      // TODO: Socket join, uid
 
-      // TODO
-      //mensaje-personal
-      //Escuchar cuando el cliente manda un mensaje
+      // TODO mensaje-personal : Escuchar cuando el cliente manda un mensaje
 
-      // TODO:
-      //Disconnect
-      //Marcar en la BD que el usuario se desconecto
+      // TODO: Disconnect : Marcar en la BD que el usuario se desconecto
 
-      // TODO:
-      //Emitir todos los usuarios conectados
+      // TODO: Emitir todos los usuarios conectados
+
+
     });
   }
 }

@@ -5,15 +5,18 @@ import { SocketProvider } from "./context/SocketContext.tsx";
 import AppRouter from "./router/RoutesMain.tsx";
 import "leaflet/dist/leaflet.css";
 import { AuthProvider } from "./context/AuthContext.tsx";
+import { ChatProvider } from "./context/chat/ChatContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
   <AuthProvider>
-    <SocketProvider>
-      <Router>
-        <AppRouter />
-      </Router>
-    </SocketProvider>
+    <ChatProvider>
+      <SocketProvider>
+        <Router>
+          <AppRouter />
+        </Router>
+      </SocketProvider>
+    </ChatProvider>
   </AuthProvider>
   // </StrictMode>
 );
